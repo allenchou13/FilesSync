@@ -22,7 +22,10 @@ namespace FilesSync
         {
             var baseDir = Path.Combine(this.targetDir, dirName);
             List<FileDigest> rlt = new List<FileDigest>();
-            EnumFiles(baseDir, rlt);
+            if (Directory.Exists(baseDir))
+            {
+                EnumFiles(baseDir, rlt);
+            }
             return rlt.ToArray();
         }
 
