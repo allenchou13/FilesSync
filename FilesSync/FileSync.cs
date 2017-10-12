@@ -49,38 +49,5 @@ namespace FilesSync
             {
             }
         }
-
-        public void Sync(string[] args)
-        {
-            string serviceUrl = null;
-            string targetDir = null;
-            string name = null;
-            for (var argi = 1; argi < args.Length; argi++)
-            {
-                var arg = args[argi];
-                Match matchRlt;
-                if (Match(arg, "^--service-url=(.+)$", out matchRlt))
-                {
-                    serviceUrl = matchRlt.Groups[1].Value;
-                }
-                else if (Match(arg, "^--target-dir=(.+)$", out matchRlt))
-                {
-                    targetDir = matchRlt.Groups[1].Value;
-                }
-                else if (Match(arg, "^--target-dir=(.+)$", out matchRlt))
-                {
-                    name = matchRlt.Groups[1].Value;
-                }
-            }
-
-            Sync(serviceUrl, name, targetDir);
-        }
-
-        private bool Match(string input, string pattern, out Match rlt)
-        {
-            var matchRlt = Regex.Match(input, pattern);
-            rlt = matchRlt;
-            return matchRlt.Success;
-        }
     }
 }

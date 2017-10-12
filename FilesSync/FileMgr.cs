@@ -4,14 +4,23 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ServiceModel;
 
 namespace FilesSync
 {
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class FileMgr : FileMgrInterface
     {
+        private string targetDir;
+
+        public FileMgr(string targetDir)
+        {
+            this.targetDir = Path.GetFullPath(targetDir);
+        }
+
         public FileDigest[] ListAllFiles(string dirName)
         {
-            var baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dirName);
+            var baseDir = Path.Combine(this.targetDir, dirName);
             List<FileDigest> rlt = new List<FileDigest>();
             EnumFiles(baseDir, rlt);
             return rlt.ToArray();
@@ -35,8 +44,7 @@ namespace FilesSync
 
         public byte[] GetFileContent(string dirName, string fileName)
         {
-            var baseDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, dirName);
-            var filePath = Path.Combine(baseDir, fileName);
+            var filePath = Path.Combine(this.targetDir, dirName, fileName);
             if (!File.Exists(filePath))
             {
                 return null;
