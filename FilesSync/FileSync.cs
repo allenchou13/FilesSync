@@ -14,6 +14,11 @@ namespace FilesSync
     {
         private void SyncFiles(string serviceUrl, string name, string targetDir)
         {
+            targetDir = Path.GetFullPath(targetDir);
+            if (!Directory.Exists(targetDir))
+            {
+                Directory.CreateDirectory(targetDir);
+            }
             FileMgrInterface mgr = new FileMgrProxy();
             var files = mgr.ListAllFiles(name);
             for (var i = 0; i < files.Length; i++)

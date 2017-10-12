@@ -24,7 +24,7 @@ namespace FilesSync
                 var client = new FileSync();
                 client.Sync(GetDictItem(options, "service-url"),
                     GetDictItem(options, "name"),
-                    GetDictItem(options, "targit-dir"));
+                    GetDictItem(options, "target-dir"));
                 Console.WriteLine("done");
             }
             else
