@@ -24,7 +24,7 @@ namespace FilesSync
                 var client = new FileSync();
                 client.Sync(GetDictItem(options, "service-url"),
                     GetDictItem(options, "name"),
-                    GetDictItem(options, "targit-dir"));
+                    GetDictItem(options, "target-dir"));
                 Console.WriteLine("done");
             }
             else
@@ -55,18 +55,20 @@ namespace FilesSync
             Dictionary<string, string> options = new Dictionary<string, string>();
             Match matchRlt;
             string[] optionNames = new string[] {
+                    "daemon",
+                    "sync",
                     "service-url",
                     "target-dir",
                     "name"
                 };
-            for (var argi = 1; argi < args.Length; argi++)
+            for (var argi = 0; argi < args.Length; argi++)
             {
                 var arg = args[argi];
                 foreach(var optionName in optionNames)
                 {
-                    if (Match(arg, $"^--{optionName}=(.*)$", out matchRlt))
+                    if (Match(arg, $"^--{optionName}($|=(.*)$)", out matchRlt))
                     {
-                        var value = matchRlt.Groups[1].Value;
+                        var value = matchRlt.Groups[2].Value;
                         options.Add(optionName, value);
                     }
                 }
