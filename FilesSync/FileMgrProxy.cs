@@ -25,12 +25,28 @@ namespace FilesSync
 
         public FileDigest[] ListAllFiles(string dirName)
         {
-            return base.Channel.ListAllFiles(dirName);
+            try
+            {
+                return base.Channel.ListAllFiles(dirName);
+            }
+            catch(Exception ex)
+            {
+                Logger.Instance.Write(LogLevel.Error, ex.Message);
+                throw new Exception("failed", ex);
+            }
         }
 
         public byte[] GetFileContent(string dirName, string fileName)
         {
-            return base.Channel.GetFileContent(dirName, fileName);
+            try
+            {
+                return base.Channel.GetFileContent(dirName, fileName);
+            }
+            catch (Exception ex)
+            {
+                Logger.Instance.Write(LogLevel.Error, ex.Message);
+                throw new Exception("failed", ex);
+            }
         }
     }
 }

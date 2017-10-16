@@ -19,15 +19,27 @@ namespace FilesSync
             {
                 Directory.CreateDirectory(targetDir);
             }
-            FileMgrInterface mgr = new FileMgrProxy();
+            FileMgrInterface mgr = new FileMgrProxy(serviceUrl);
             var files = mgr.ListAllFiles(name);
             for (var i = 0; i < files.Length; i++)
             {
                 var f = files[i];
-                var fc = mgr.GetFileContent(name, f.FileName);
                 var fpath = Path.Combine(targetDir, f.FileName);
+
+                if (File.Exists(fpath))         // if file is newer than server's, not need to update
+                {
+                    var time = File.GetLastWriteTimeUtc(fpath);
+                    if(time >= f.LastModifyTime)
+                    {
+                        Logger.Instance.Write(LogLevel.Info, $"skip file {f.FileName}.");
+                        continue;
+                    }
+                }
+
+                var fc = mgr.GetFileContent(name, f.FileName);
                 File.WriteAllBytes(fpath, fc);
                 File.SetLastWriteTimeUtc(fpath, f.LastModifyTime);
+                Logger.Instance.Write(LogLevel.Info, $"updated file {f.FileName}.");
             }
         }
 
@@ -52,6 +64,7 @@ namespace FilesSync
             }
             catch (Exception ex)
             {
+                Logger.Instance.Write(LogLevel.Warn, ex.Message);
             }
         }
     }

@@ -16,8 +16,18 @@ namespace FilesSync
             {
                 var fileMgr = new FileMgr(GetDictItem(options, "target-dir"));
                 var listener = new FileMgrListener(GetDictItem(options, "service-url"), fileMgr);
-                Console.WriteLine("server listen uri: " + listener.BaseUri + ".");
-                listener.Run();
+                if (listener.StartListen())
+                {
+                    Console.WriteLine("server listen uri: " + listener.BaseUri + ".");
+                    while (Console.ReadLine() != "exit")
+                    {
+                        Task.Delay(1000).Wait();
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("start listen failed.");
+                }
             }
             else if (options.ContainsKey("sync"))
             {

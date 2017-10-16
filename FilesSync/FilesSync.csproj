@@ -50,9 +50,11 @@
     <Compile Include="FileMgr.cs" />
     <Compile Include="FileMgrInterface.cs" />
     <Compile Include="FileMgrProxy.cs" />
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileMgrListener.cs" />
+    <Compile Include="WithExtension.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

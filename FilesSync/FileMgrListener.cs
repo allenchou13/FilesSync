@@ -27,15 +27,27 @@ namespace FilesSync
             this.fileMgr = fileMgr;
         }
 
-        public void Run()
+        public bool StartListen()
         {
             var listener = new ServiceHost(fileMgr, new Uri(listenUri));
             listener.AddServiceEndpoint(CreateServiceEndpoint(listenUri));
             listener.Description.Behaviors.Add(new ServiceMetadataBehavior() { HttpGetEnabled = true });
 
-            listener.Open();
-
-            Console.ReadKey();
+            try
+            {
+                listener.Open();
+                return true;
+            }
+            catch(Exception ex)
+            {
+                Logger.Instance.Write(LogLevel.Error, ex.Message);
+                if(ex.Message.Contains("HTTP 无法注册 URL"))
+                {
+                    var uri = new Uri(this.listenUri);
+                    Logger.Instance.Write(LogLevel.Info, $"可尝试命令: netsh http add urlacl url=http://+:{uri.Port}{uri.AbsolutePath} user=everyone");
+                }
+                return false;
+            }
         }
 
         public static ServiceEndpoint CreateServiceEndpoint(string listenUri)
